@@ -1,5 +1,29 @@
+-- Configura las opciones de SET
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+SET ANSI_PADDING ON;
+
 USE BD2;
 GO
+
+-- Trigger: History Log
+CREATE TRIGGER HistoryLog1
+ON DATABASE
+FOR CREATE_PROCEDURE, ALTER_PROCEDURE, DROP_PROCEDURE,
+   CREATE_FUNCTION, ALTER_FUNCTION, DROP_FUNCTION,
+   CREATE_TABLE, ALTER_TABLE, DROP_TABLE
+AS
+BEGIN
+    DECLARE @eventData XML = EVENTDATA();
+    DECLARE @eventType NVARCHAR(100) = @eventData.value('(/EVENT_INSTANCE/EventType)[1]', 'nvarchar(100)');
+    DECLARE @objectName NVARCHAR(255) = @eventData.value('(/EVENT_INSTANCE/ObjectName)[1]', 'nvarchar(255)');
+
+    INSERT INTO [practica1].[HistoryLog] (Date, Description)
+    VALUES (GETDATE(), @eventType + ' on ' + @objectName);
+END;
+GO
+
+
 -------------------------------------- TRANSACCIONES --------------------------------------
 -- PR1 --------------------------------------
 -- Transaccion
@@ -35,10 +59,10 @@ BEGIN
 			VALUES (@UserId, @Credits);
 
 			-- Registrar TFA si está habilitado
-            IF @TFAStatus = 1
+            -- IF @TFAStatus = 1
             BEGIN
                 INSERT INTO [practica1].[TFA] ([UserId], [Status], [LastUpdate])
-                VALUES (@UserId, 0, GETDATE()); -- Se establece el estado TFA como no activo
+                VALUES (@UserId, @TFAStatus, GETDATE()); -- Se establece el estado TFA como no activo
             END;
 
             INSERT INTO [practica1].[Notification] ([UserId], [Message], [Date])
@@ -106,6 +130,47 @@ BEGIN
         -- Propagar el error
         THROW 50000,'Error en registro de usuario', 1;
         
+    END CATCH;
+END;
+GO
+
+-- PR7 - Asignar tutor a clase dada
+-- Transacción exitosa: Asignación exitosa del curso
+CREATE PROCEDURE [practica1].[PR7]
+    @TutorId UNIQUEIDENTIFIER,
+    @CourseCodCourse INT
+AS
+BEGIN
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        -- Verificar si el curso ya tiene un tutor asignado
+        IF EXISTS (SELECT 1 FROM practica1.CourseTutor WHERE CourseCodCourse = @CourseCodCourse)
+        BEGIN
+            -- El curso ya tiene un tutor asignado
+            THROW 50000, 'El curso ya tiene un tutor asignado.', 1;
+        END
+        ELSE
+        BEGIN
+            -- Asignar el tutor al curso
+            INSERT INTO practica1.CourseTutor (TutorId, CourseCodCourse)
+            VALUES (@TutorId, @CourseCodCourse);
+
+            -- Registrar la transacción en el History Log
+            INSERT INTO practica1.HistoryLog (Date, Description)
+            VALUES (GETDATE(), 'Asignación exitosa del curso' + CAST(@CourseCodCourse AS NVARCHAR(MAX)) + ' al estudiante tutor ' + CAST(@TutorId AS NVARCHAR(MAX)));
+
+            COMMIT TRANSACTION;
+        END;
+    END TRY
+    BEGIN CATCH
+        -- Si ocurre un error, hacer rollback y registrar en el History Log
+        ROLLBACK TRANSACTION;
+
+        INSERT INTO practica1.HistoryLog (Date, Description)
+        VALUES (GETDATE(), 'Error en asignación de curso ' + CAST(@CourseCodCourse AS NVARCHAR(MAX)) + ' al estudiante tutor ' + CAST(@TutorId AS NVARCHAR(MAX)));
+
+        -- Propagar el error
+        THROW;
     END CATCH;
 END;
 GO
@@ -235,24 +300,25 @@ GO
 -- Transaccion
 -- Creación de Cursos
 CREATE PROCEDURE [practica1].[PR5]
-    @Name NVARCHAR(255),
+	@CodCourse INT,
+    @Name NVARCHAR(MAX),
     @CreditsRequired INT
 AS
 BEGIN
     BEGIN TRANSACTION;
     BEGIN TRY
         -- Validar los datos de entrada
-        IF @Name IS NULL OR @CreditsRequired IS NULL
+        IF @Name IS NULL OR @CreditsRequired IS NULL OR @CodCourse IS NULL
         BEGIN
-            THROW 50000, 'Error: Debe proporcionar valores válidos para Name y CreditsRequired.', 1;
+            THROW 50000, 'Error: Debe proporcionar valores válidos para CodCourse, Name y CreditsRequired.', 1;
         END;
 
         -- Verificar si el curso ya existe
-        IF NOT EXISTS (SELECT 1 FROM practica1.Course WHERE Name = @Name)
+        IF NOT EXISTS (SELECT 1 FROM practica1.Course WHERE Name = @Name OR CodCourse = @CodCourse)
         BEGIN
             -- Insertar el nuevo curso
-            INSERT INTO practica1.Course (Name, CreditsRequired)
-            VALUES (@Name, @CreditsRequired);
+            INSERT INTO practica1.Course (CodCourse, Name, CreditsRequired)
+            VALUES (@CodCourse, @Name, @CreditsRequired);
 
             -- Registrar la transacción en el History Log
             INSERT INTO practica1.HistoryLog (Date, Description)
@@ -371,7 +437,7 @@ RETURNS TABLE
 AS
 RETURN
 (
-    SELECT c.CodCourse, c.Name, c.CreditsRequired
+    SELECT ct.CourseCodCourse, c.Name, c.CreditsRequired
     FROM practica1.CourseTutor ct
     INNER JOIN practica1.Course c ON ct.CourseCodCourse = c.CodCourse
     WHERE ct.TutorId = @TutorProfileId
@@ -427,17 +493,21 @@ RETURN
     WHERE U.Id = @UserId
 );
 GO
--------------------------------------- TRIGGERS --------------------------------------
--- Trigger
+
+USE BD2;
+GO
+/*
 -- Trigger: History Log
-CREATE TRIGGER HistoryLog
+CREATE TRIGGER [practica1].[HistoryLog]
 ON DATABASE
 FOR CREATE_PROCEDURE, ALTER_PROCEDURE, DROP_PROCEDURE,
    CREATE_FUNCTION, ALTER_FUNCTION, DROP_FUNCTION,
    CREATE_TABLE, ALTER_TABLE, DROP_TABLE
 AS
 BEGIN
-    INSERT INTO practica1.HistoryLog (Date, Description)
+    INSERT INTO [practica1].[HistoryLog] (Date, Description)
     VALUES (GETDATE(), EVENTDATA().value('(/EVENT_INSTANCE/EventType)[1]', 'nvarchar(100)'))
 END;
 GO
+*/
+
