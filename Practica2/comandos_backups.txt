@@ -1,0 +1,22 @@
+DIA 1 Habitaciones
+mysqldump -u root -p Practica2 HABITACION > /backups/full_backup_habitacion_dia1.sql
+mysqldump -u root -p Practica2 HABITACION --where="idHabitacion >= 0" > /backups/backup_incremental_habitacion_dia1.sql
+
+DIA 2 Pacientes 
+mysqldump -u root -p Practica2 > /backups/full_backup_paciente_dia2.sql
+mysqldump -u root -p Practica2 PACIENTE > /backups/backup_incremental_paciente_dia2.sql
+
+
+DIA 3 Log activiades 1
+mysqldump -u root -p Practica2 > /backups/full_backup_log_actividad_dia3.sql
+mysqldump -u root -p Practica2 LOG_ACTIVIDAD > /backups/backup_incremental_log_actividad_dia3.sql
+
+
+DIA 4 Log activiades 2
+mysqldump -u root -p Practica2 > /backups/full_backup_log_actividad_dia4.sql
+mysqldump -u root -p Practica2 LOG_ACTIVIDAD --where="STR_TO_DATE(timestampx, '%m/%d/%Y %h:%i:%s %p') > '2021-06-28 08:49:24'" > /backups/backup_incremental_log_actividad_dia4.sql
+
+
+DIA 5 LOG habitaciones 
+mysqldump -u root -p Practica2 > /backups/full_backup_log_habitacion_dia5.sql
+mysqldump -u root -p Practica2 LOG_HABITACION > /backups/backup_incremental_log_habitacion_dia5.sql
