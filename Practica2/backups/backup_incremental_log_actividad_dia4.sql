@@ -19,10 +19,10 @@
 -- Table structure for table `LOG_ACTIVIDAD`
 --
 
-DROP TABLE IF EXISTS `LOG_ACTIVIDAD`;
+-- DROP TABLE IF EXISTS `LOG_ACTIVIDAD`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `LOG_ACTIVIDAD` (
+CREATE TABLE IF NOT EXISTS `LOG_ACTIVIDAD` (
   `id_log_actividad` int NOT NULL AUTO_INCREMENT,
   `timestampx` varchar(100) DEFAULT NULL,
   `actividad` varchar(500) DEFAULT NULL,
