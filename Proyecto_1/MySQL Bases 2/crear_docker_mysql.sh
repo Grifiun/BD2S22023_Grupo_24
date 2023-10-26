@@ -12,3 +12,7 @@ docker start bd2_p1_mysql
 echo "Se inicia la instancia"
 
 docker ps -a
+
+# mkdir /backups
+# docker exec -it bd2_p1_mysql mount --bind "/home/denilson/Documents/Proyectos/Bases 2/BD2S22023_Grupo_24/Proyecto_1/backups/" /backups/
+

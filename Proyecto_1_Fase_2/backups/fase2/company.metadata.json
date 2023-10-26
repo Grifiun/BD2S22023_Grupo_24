@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"games.idGame":{"$numberInt":"1"}},"name":"games.idGame_1"},{"v":{"$numberInt":"2"},"key":{"idCompany":{"$numberInt":"1"}},"name":"idCompany_1"}],"uuid":"58d14f858aa24edebd63dc2e724c42e5","collectionName":"company","type":"collection"}

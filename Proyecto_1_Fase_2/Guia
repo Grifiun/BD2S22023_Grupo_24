@@ -1,0 +1,186 @@
+
+La API de Games es: "
+Video Games!
+Request Path
+
+https://api.igdb.com/v4/games
+field 	type 	description
+checksum 	uuid 	Hash of the object
+name 	String 	Name of game
+summary 	String 	A description of the game
+storyline 	String 	A short description of a games story
+rating 	Double 	Average IGDB user rating
+rating_count 	Integer 	Total number of IGDB user ratings
+aggregated_rating 	Double 	Rating based on external critic scores
+aggregated_rating_count 	Integer 	Number of external critic scores
+total_rating 	Double 	Average rating based on both IGDB user and external critic scores
+total_rating_count 	Integer 	Total number of user and external critic scores
+first_release_date 	Unix Time Stamp 	The first release date for this game
+keywords 	Array of Keyword IDs 	Associated keywords
+screenshots 	Array of Screenshot IDs 	Screenshots of this game
+videos 	Array of Game Video IDs 	Videos of this game
+cover 	Reference ID for Cover 	The cover of this game
+artworks 	Array of Artwork IDs 	Artworks of this game
+websites 	Array of Website IDs 	Websites associated with this game"
+parent_game 	Reference ID for Game 	If a DLC, expansion or part of a bundle, this is the main game or bundle
+status 	Status Enum 	The status of the games release
+category 	Category Enum 	The category of this game
+
+  game_localizations 	Array of Game Localization IDs 	Supported game localizations for this game. A region can have at most one game localization for a given game
+  game_modes 	Array of Game Mode IDs 	Modes of gameplay
+- genres 	Array of Genre IDs 	Genres of the game
+  involved_companies 	Array of Involved Company IDs 	Companies who developed this game
++ language_supports 	Array of Language Support IDs 	Supported Languages for this game
+  platforms 	Array of Platform IDs 	Platforms this game was released on
+  player_perspectives 	Array of Player Perspective IDs 	The main perspective of the player
+  release_dates 	Array of Release Date IDs 	Release dates of this game
+  themes 	Array of Theme IDs 	Themes of the game
+  age_ratings 	Array of Age Rating IDs 	The PEGI rating
+  alternative_names 	Array of Alternative Name IDs 	Alternative names for this game
+
+ahora la tabla de Game es "
+CREATE TABLE IF NOT EXISTS `mydb`.`Game` (
+  `idGame` INT NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `summary` VARCHAR(5000) NULL,
+  `storyline` VARCHAR(5000) NULL,
+  `rating` DECIMAL(6,2) NULL,
+  `ratingCount` INT NULL,
+  `aggregatedRating` DECIMAL(6,2) NULL,
+  `aggregatedRatingCount` INT NULL,
+  `totalRating` DOUBLE(6,2) NULL,
+  `totalRatingCount` INT NULL,
+  `firstReleaseDate` DATE NULL,
+  `keywords` VARCHAR(45) NULL,
+  `screenshots` VARCHAR(45) NULL,
+  `videos` VARCHAR(45) NULL,
+  `coverImage` VARCHAR(45) NULL,
+  `artworks` VARCHAR(45) NULL,
+  `websites` VARCHAR(45) NULL,
+  `parentGame` INT NULL,
+  `idStatus` INT NOT NULL,
+  `idCategory` INT NOT NULL,
+  PRIMARY KEY (`idGame`),
+  INDEX `fk_Game_Game_idx` (`parentGame` ASC) VISIBLE,
+  INDEX `fk_Game_GameStatus1_idx` (`idStatus` ASC) VISIBLE,
+  INDEX `fk_Game_Category1_idx` (`idCategory` ASC) VISIBLE,
+  CONSTRAINT `fk_Game_Game`
+    FOREIGN KEY (`parentGame`)
+    REFERENCES `mydb`.`Game` (`idGame`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Game_GameStatus1`
+    FOREIGN KEY (`idStatus`)
+    REFERENCES `mydb`.`GameStatus` (`idGameStatus`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Game_Category1`
+    FOREIGN KEY (`idCategory`)
+    REFERENCES `mydb`.`Category` (`idCategory`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+" de estas filas "checksum" es "idGame", el resto de "name" hasta "category" son de la tabla Game, los siguientes datos de "game_localizations" hasta "alternative_names" son referencias hacia otras tablas
+
+De momento hazme el fetch de https://api.igdb.com/v4/games con todos los field que enlisté y crea un csv con los primeros valores de Game (idGame seria checksum, luego hasta Category son datos de la tabla juegos), si el archivo csv ya existe, solo agrega esos registros
+
+
+
+
+
+
+ysql> SELECT * FROM Game;
++--------+-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------+------------------+-----------------------+-------------+------------------+------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+---------------------+-----------+------------+-----------------------------+---------------------------------------------------------------------+------------+----------+------------+
+| idGame | name                  | summary                                                                                                                                                                                                                                                                                                                     | storyline                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | rating | ratingCount | aggregatedRating | aggregatedRatingCount | totalRating | totalRatingCount | firstReleaseDate | keywords                                                                                                                                      | screenshots         | videos    | coverImage | artworks                    | websites                                                            | parentGame | idStatus | idCategory |
++--------+-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------+------------------+-----------------------+-------------+------------------+------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+---------------------+-----------+------------+-----------------------------+---------------------------------------------------------------------+------------+----------+------------+
+|    500 | Batman: Arkham Asylum | Using a great variety of gadgets you must make your way around the island, and the asylums halls to find and stop the joker. The game uses a 3-button combat system, but with a great number of gadget abilites which Batman can unlock. This makes for a very cinematic combat experience when fighting the Joker's goons. | After the Joker assaults Gotham City Hall, he is caught by Batman and taken to Arkham Asylum, which temporarily houses many members of the Joker's gang, who were transferred after a fire at Blackgate Prison. Believing the Joker allowed himself to be captured, Batman accompanies him into the asylum. The Joker's plan is revealed as Harley Quinn takes control of the security and the Joker escapes into the facility, aided by a corrupt guard who kidnaps Commissioner Gordon. The Joker threatens to detonate bombs hidden around Gotham City if anyone tries to enter Arkham, forcing Batman to work alone. Tracking Quinn to the medical facility to rescue Gordon, Batman is exposed to the Scarecrow's fear toxin and hallucinates, seeing Gordon's death and the corpses of his parents talking to him. After fighting off Scarecrow, Batman finds and subdues Quinn before rescuing Gordon. The Joker then directs Batman to the captured Bane, who has been experimented on by asylum doctor Penelope Young. The Joker frees Bane and Batman is forced to fight him, during which Quinn escapes. Afterward, he goes to a secret Batcave installation he had hidden on the island, where Batman restocks his gadgets.
+
+There, Batman learns that the Joker returned to the asylum to gain access to Young, who has been developing Titana more powerful version of the Venom drug that gives Bane his strengthintending to use it to help patients survive more strenuous therapies. Young learned that the Joker had been funding her research to create an army of superhuman henchmen; her refusal to hand over the formula precipitated Joker's return to the Asylum. While searching for Young, Batman is again attacked by Scarecrow and the fear toxin, and hallucinates the night of his parents' deaths. After he recovers, Batman destroys Young's Titan formula and rescues Young from Victor Zsasz. An explosion kills Young and the Joker obtains the completed batches of Titan.
+
+At the Penitentiary, Quinn releases Poison Ivy from her cell before being imprisoned by Batman. Quinn accidentally reveals that Joker has a Titan production facility in the Arkham botanical gardens. Batman travels there and learns that Titan is created by genetically modified plants. He enlists Ivy's help to create an antidote and learns that it can only be made from spores found exclusively in Killer Croc's lair in a sewer. En route to Croc, Batman is again attacked by Scarecrow and overcomes several doses of fear toxin. Meanwhile, Joker injects Ivy with Titan, enhancing her powers. Ivy begins ravaging Arkham Island with giant mutant plants. Pursued by Batman into Croc's lair, Scarecrow is attacked by Croc and dragged underwater. Batman recovers the necessary spores and subdues Croc before returning to the Batcave, but can only synthesize one dose of the antidote before Ivy's plants breach the cave and destroy his equipment.
+
+Batman returns to the botanical gardens and defeats Ivy, halting the rampaging plants. The Joker announces that the preparations for his party are finally complete and Batman travels to the asylum's visitor center where the Joker's applauding henchmen welcome him. The Joker reveals he has recaptured Gordon and tries to shoot him with a Titan-filled dart; Batman leaps to Gordon's defense and is shot instead. Batman attempts to resist the change, and an upset Joker takes an overdose of Titan, mutating into a massive monster. In a makeshift arena on the building's roof, the Joker challenges Batman to a fight as Titan-induced monsters in front of news helicopters. Batman refuses to transform, uses the antidote on himself, and defeats the Titan-affected Joker and his henchmen, knocking his nemesis unconscious with an explosive gel-enhanced punch. In the aftermath, those affected by Titan begin to revert to normal, including the Jokerwho is restrained and taken into custody as police officers retake the asylum. Batman overhears a call about a crime led by Two-Face in progress and flies back to Gotham City in the Batwing. In a post-credits scene, a crate of Titan formula is shown floating in the ocean near the asylum when a hand surfaces and grabs it. |  85.86 |        2105 |            89.40 |                     8 |       87.63 |             2113 | 2009-08-25       | 22,215,470,1032,1033,1494,1971,3540,4135,4245,4310,4345,4520,4541,4580,4726,4852,4897,5323,5575,6066,6621,7334,7335,7351,7352,9081,9441,17215 | 561,562,563,564,565 | 182,67275 | 87715      | 725,726,727,728,729,730,731 | 6162,107023,107024,107025,107026,107028,150960,150961,188818,332692 |       NULL |        0 |          0 |
++--------+-----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------+-------------+------------------+-----------------------+-------------+------------------+------------------+-----------------------------------------------------------------------------------------------------------------------------------------------+---------------------+-----------+------------+-----------------------------+---------------------------------------------------------------------+------------+----------+------------+
+
+
+
+----------------------------------------------------------
+Languages that are used in the Language Support endpoint.
+Request Path
+
+https://api.igdb.com/v4/languages
+field 	type 	description
+checksum 	uuid 	Hash of the object
+name 	String 	The English name of the Language
+native_name 	String 	The Native Name of the Language
+
+
+idLanguage: 'id'
+nameLanguage: 'name'
+nativeName: 'native_name'
+
+----------------------------------------------------------
+Language Support Type
+Language Support Types contains the identifiers for the support types that Language Support uses.
+Request Path
+
+https://api.igdb.com/v4/language_support_types
+field 	type 	description
+checksum 	uuid 	Hash of the object
+name 	String 	
+
+idLanguageSupportType: 'id'
+name: 'name'
+
+----------------------------------------------------------
+Language Support
+Games can be played with different languages for voice acting, subtitles, or the interface language.
+Request Path
+https://api.igdb.com/v4/language_supports
+field 	type 	description
+checksum 	uuid 	Hash of the object
+game 	Reference ID for Game 	
+language 	Reference ID for Language 	
+language_support_type 	Reference ID for Language Support Type 	
+
+idGame: 'game'
+idLanguage: 'language'
+idLanguageSupportType: 'language_support_type'
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+-----------------------------------------------------------
+-----------------------------------------------------------
+https://api.igdb.com/v4/games
+
+const gameFieldsMapping = {
+  'idGame': 'id',
+  'platforms': 'platforms',
+  'genres': 'genre'
+};
+
+id 
+genres --> Array
+--> crear INSERT INTO GameGenre (idGenre, idGame) VALUES ('VALOR ARRAY', 'id')
+platforms --> Array
+--> crear INSERT INTO GameGenre (idPlatfor, idGame) VALUES ('VALOR ARRAY', 'id')
+-----------------------------------------------------------
+-----------------------------------------------------------
+-----------------------------------------------------------
+-----------------------------------------------------------
+
+
+Genres of video game https://api.igdb.com/v4/genres
+field 	type 	description
+
+'idGenre' : 'id',
+'name': 'name'
+
+-----------------------------------------------------------
+Platform  https://api.igdb.com/v4/platforms
+field 	type 	description
+
+'idPlatform': 'id' 
+'namePlatform': 'name'
+

@@ -1,0 +1,11 @@
+# Ignorar archivos CSV
+*.csv
+
+# Ignorar archivos SQL
+*.sql
+
+# Ignorar la carpeta node_modules (y su contenido)
+node_modules/
+
+# ENV
+.env
