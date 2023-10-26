@@ -13,7 +13,7 @@ time mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS Calificacion_Fase2;"
 time mysql -u root -p Calificacion_Fase2 < /backups/backup-proyecto-1-fase-2.sql
 
 time mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS Fase2;"
-time mysql -u root -p Fase2 < /backups/backup-proyecto-1-fase-2.sql
+time mysql -u root -p fase2 < /backups/backup-proyecto-1-fase-2.sql
 time mysql -u root -p mydb Company < /backups/backup-proyecto-1-fase-2-Company.sql
 
 
@@ -23,8 +23,13 @@ time mysql -u root -p mydb Company < /backups/backup-proyecto-1-fase-2-Company.s
 
 ----------- MONGO
 docker cp mongodb-f2:/backups/fase2 "/home/denilson/Documents/Proyectos/Bases 2/BD2S22023_Grupo_24/Proyecto_1_Fase_2/backups/" 
+docker cp mongodb-f2:/backups/fase2 "/home/denilson/Documents/Proyectos/Bases 2/BD2S22023_Grupo_24/Proyecto_1_Fase_2/backups/" 
 
-mongodump --host localhost --port 27017 --username admin --password admin --authenticationDatabase admin --db fase2 --collection genre --out /backus/
+
+mongodump --host localhost --port 27017 --username admin --password admin --authenticationDatabase admin --db fase2 --collection genre --out /backups/
+mongodump --host localhost --port 27017 --username admin --password admin --authenticationDatabase admin --db fase2 --collection game --out /backups/
+mongodump --host localhost --port 27017 --username admin --password admin --authenticationDatabase admin --db fase2 --collection company --out /backups/
+time mongodump --host localhost --port 27017 --username admin --password admin --authenticationDatabase admin --db fase2 --out /backups/
 
 --host localhost --port 27017 --username admin --password admin --authenticationDatabase admin
 
