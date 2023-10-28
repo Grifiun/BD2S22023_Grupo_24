@@ -53,10 +53,6 @@ La respuesta tendrá un formato JSON, y debería verse algo así:
 
 Luego, puede utilizar el token de acceso y las credenciales de cliente para realizar solicitudes a los puntos finales de la API de Twitch, como se muestra en la parte final de tu documento.
 
-Espero que esta información sea útil para tu proyecto. Si necesitas más detalles o ayuda adicional, no dudes en preguntar.
-
-¡Por supuesto! Aquí está la información adicional que deseas agregar al documento:
-
 #### b.4) Conexión y Solicitud a los Endpoints
 
 Una vez que haya obtenido el token de acceso y las credenciales de cliente de Twitch, puede utilizarlos para conectarse y realizar solicitudes a los endpoints de la API. A continuación, se muestra un ejemplo de cómo construir una solicitud y realizarla:
@@ -103,8 +99,6 @@ const endpoints = {
 ```
 
 Con esta estructura, puedes definir fácilmente endpoints para diferentes tipos de datos y realizar solicitudes a la API de acuerdo con tus necesidades.
-
-Espero que esta información adicional sea de utilidad para tu proyecto. Si tienes más preguntas o necesitas más detalles, no dudes en preguntar.
 
 #### c) Stored Procedure
 Se ha implementado un stored procedure que recibe el nombre del juego o su ID como parámetro y muestra información relacionada con el mismo, siguiendo el formato mínimo requerido.
@@ -189,7 +183,7 @@ $ db.createUser({
 })
 ```
 
-###### d.2.4) #### Conexión a MongoDB en un Host Remoto
+###### d.2.4) Conexión a MongoDB en un Host Remoto
 
 Si deseas conectar MongoDB a un host remoto, utiliza una cadena de conexión que incluye la dirección del servidor remoto y las credenciales de acceso. Por ejemplo, la cadena de conexión para conectarse a un host remoto podría ser similar a esta:
 
@@ -200,8 +194,6 @@ mongodb+srv://user:*****@mongocluster.***.****.net/
 Asegúrate de proporcionar la dirección del servidor y las credenciales correctas según la configuración de tu host remoto.
 
 Estos pasos te permitirán configurar MongoDB en localhost, crear una base de datos y un usuario, y conectarte a un host remoto si es necesario.
-
-Si tienes alguna pregunta adicional o necesitas más detalles, no dudes en preguntar.
 
 e) Se presenta el diseño de la base de datos NoSQL, explicando la estructura de los documentos y colecciones utilizados.
 
@@ -254,7 +246,6 @@ A continuación, presento el diseño de la base de datos NoSQL, explicando la es
 
 Este diseño de base de datos NoSQL se ha creado para almacenar información detallada sobre juegos, géneros y compañías, lo que facilita la realización de diversas consultas y búsquedas en la base de datos. La estructura de documentos y colecciones se ha diseñado de manera eficiente para satisfacer los requerimientos de la aplicación.
 
-
 f) Las consultas definidas en la Fase 1 se replican en MongoDB, utilizando métodos o funciones en lugar de stored procedures. Se proporciona el código utilizado.
 
 ## Instrucciones de Uso
@@ -294,11 +285,6 @@ Se proporcionan instrucciones claras sobre cómo utilizar y ejecutar las consult
 
 Estas consultas y stored procedures están diseñados para proporcionar información específica sobre los juegos en la base de datos. Los formatos de salida y otros detalles específicos pueden ser definidos durante la implementación.
 
-## Calificación
-Se detalla la fecha de entrega y calificación de cada fase del proyecto.
-
-## README.md
-Un archivo README.md se proporciona en la raíz del proyecto para resumir la información clave y facilitar la comprensión del proyecto.
 
 Asegúrate de que la documentación sea clara, concisa y esté bien organizada. Proporciona ejemplos y ejecute las consultas y procedimientos para demostrar su funcionamiento.
 
