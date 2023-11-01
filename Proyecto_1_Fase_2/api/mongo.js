@@ -13,8 +13,7 @@ mongosh --host localhost --port 27017 --username admin --password admin --authen
 
 
 // Mongo Cloud
-//mongodb+srv://rootuser:GXDzYTUiDzEY6Py4@mongocluster.pycs6zw.mongodb.net/
-//mongodb+srv://rootuser:*****@mongocluster.pycs6zw.mongodb.net/
+//mongodb+srv://rootuser:*****@mongocluster.********.mongodb.net/
 
 Create DB fase2
 	$ use fase2
